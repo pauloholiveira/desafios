@@ -73,11 +73,15 @@ app.get('/', (req,res) => {
     html_response += '<h3>Pessoas</h3>';
     html_response += '<table>';
     html_response += '  <tr><th>ID</th><th>NOME</th></tr>';
-    nomes.forEach(element => {
-        console.log('ID: '+element.id+ ' -  NOME: '+element.name);
-        html_response += '  <tr><td>'+element.id+ '</td><td>'+element.name+'</td></tr>';
-        
-    });
+    if(nomes!=undefined){
+      nomes.forEach(element => {
+          console.log('ID: '+element.id+ ' -  NOME: '+element.name);
+          html_response += '  <tr><td>'+element.id+ '</td><td>'+element.name+'</td></tr>';
+          
+      });
+    } else {
+      html_response += '  <tr><td colspan=2>Vazio. Recarregue a página</td></tr>';
+    }
     html_response += '</table>';
 
     res.send(html_response);

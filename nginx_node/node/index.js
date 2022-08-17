@@ -12,11 +12,11 @@ const config = {
 const mysql = require('mysql');
 const connection = mysql.createConnection(config);
 
-const create = 'CREATE TABLE people (id INT NOT NULL AUTO_INCREMENT, name VARCHAR(255), PRIMARY KEY (id))';
+const create = 'CREATE TABLE people (id INT NOT NULL AUTO_INCREMENT, name VARCHAR(255) UNIQUE, PRIMARY KEY (id))';
 const insert1 = 'INSERT INTO people (name) values(\'Paulo Henrique de Oliveira\')';
 const insert2 = 'INSERT INTO people (name) values(\'Fulano\')';
 const insert3 = 'INSERT INTO people (name) values(\'João da Silva\')';
-const select = 'SELECT * FROM people';
+const select = 'SELECT * FROM people order by id';
 
 connection.query(
     create,
@@ -31,7 +31,7 @@ connection.query(
     insert1,
     function(err, rows){
       if(err) {
-        console.log("Erro ao inserir na tabela.");
+        console.log("Registro 1 já Existe");
       }
     }            
   );
@@ -39,7 +39,7 @@ connection.query(
     insert2,
     function(err, rows){
       if(err) {
-        console.log("Erro ao inserir na tabela.");
+        console.log("Registro 2 já Existe");
       }
     }            
   );
@@ -47,12 +47,12 @@ connection.query(
     insert3,
     function(err, rows){
       if(err) {
-        console.log("Erro ao inserir na tabela.");
+        console.log("Registro 3 já Existe");
       }
     }            
   );
 
-connection.end();
+  connection.end();
 
 let nomes;
 

@@ -1,4 +1,4 @@
-# desafios
+# Desafios
 
 Imagem do Desafio GO no Docker Hub -
 
@@ -10,6 +10,6 @@ Desafio nginx+node+mysql
 
   - docker-compose up -d
   
-  Pontos para melhorar neste desafio.
+Pontos para melhorar neste desafio.
   
-    - usar async/await para que espere carregar os dados do banco antes de listar. 
+  - usar async/await para que espere carregar os dados do banco antes de listar. 

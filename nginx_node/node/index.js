@@ -12,80 +12,52 @@ const config = {
 const mysql = require('mysql');
 const connection = mysql.createConnection(config);
 
-const create = 'CREATE TABLE people (id INT NOT NULL AUTO_INCREMENT, name VARCHAR(255) UNIQUE, PRIMARY KEY (id))';
-const insert1 = 'INSERT INTO people (name) values(\'Paulo Henrique de Oliveira\')';
-const insert2 = 'INSERT INTO people (name) values(\'Fulano\')';
-const insert3 = 'INSERT INTO people (name) values(\'João da Silva\')';
+const insert = 'INSERT INTO people (name) values(\'Paulo Henrique de Oliveira\')';
 const select = 'SELECT * FROM people order by id';
 
 connection.query(
-    create,
-    function(err, rows){
-      if(err) {
-        console.log("Tabela people já existe.");
-      }
-    }            
-  );
+  insert,
+  function(err, rows){
+    if(err) {
+      console.log("Erro ao inserir registro. ");
+      console.log(err);
+    }
+  }            
+);
+connection.end();
 
-  connection.query(
-    insert1,
-    function(err, rows){
-      if(err) {
-        console.log("Registro 1 já Existe");
-      }
-    }            
-  );
-  connection.query(
-    insert2,
-    function(err, rows){
-      if(err) {
-        console.log("Registro 2 já Existe");
-      }
-    }            
-  );
-  connection.query(
-    insert3,
-    function(err, rows){
-      if(err) {
-        console.log("Registro 3 já Existe");
-      }
-    }            
-  );
+function listaPessoasHTML(res){
+  html_response =  '<h1>Full Cycle</h1>';
+  html_response += '<h3>Pessoas</h3>';
+  html_response += '<table>';
+  html_response += '  <tr><th>ID</th><th>NOME</th></tr>';
 
-  connection.end();
+  var conLista =  mysql.createConnection(config);
+  var busca = 'SELECT * FROM people order by id';
+  conLista.query(busca, (error, results, fields) => {
+    if(error) 
+      console.log('Erro: '+ error);
+    else {
 
-let nomes;
+      for (const nome of results) {
+        console.log(nome);
+        console.log(nome.id);
+        console.log(nome.name);
+        html_response += '  <tr><td>'+nome.id+ '</td><td>'+nome.name+'</td></tr>';
+      }
+
+    }
+    conLista.end();
+    
+    html_response += '</table>';
+    console.log('executou Lista de Pessoas!');
+    res.send(html_response);
+});
+}
+
 
 app.get('/', (req,res) => {
-    
-    let connection2 = mysql.createConnection(config);
-    connection2.query(
-        select,
-        function(err, rows){
-          if(err) throw err;
-          nomes = rows;
-          console.log(rows);
-        }            
-    );
-    connection2.end();
-    
-    html_response = '<h1>Full Cycle</h1>';
-    html_response += '<h3>Pessoas</h3>';
-    html_response += '<table>';
-    html_response += '  <tr><th>ID</th><th>NOME</th></tr>';
-    if(nomes!=undefined){
-      nomes.forEach(element => {
-          console.log('ID: '+element.id+ ' -  NOME: '+element.name);
-          html_response += '  <tr><td>'+element.id+ '</td><td>'+element.name+'</td></tr>';
-          
-      });
-    } else {
-      html_response += '  <tr><td colspan=2>Vazio. Recarregue a página</td></tr>';
-    }
-    html_response += '</table>';
-
-    res.send(html_response);
-
+  listaPessoasHTML(res);
 })
 
 app.listen(port, () =>{

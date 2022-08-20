@@ -5,7 +5,7 @@ services:
     build:
       context: node
     container_name: app
-    entrypoint: dockerize -wait tcp://db:3306 -timeout 20s docker-entrypoint.sh node index.js
+    entrypoint: dockerize -wait tcp://db:3306 -timeout 30s docker-entrypoint.sh node index.js
     networks:
       - node-network
     volumes:
@@ -37,6 +37,7 @@ services:
       dockerfile: Dockerfile
     image: dockerpaulooliveira/nginx:prod
     container_name: nginx
+    entrypoint: dockerize -wait tcp://app:3000 -timeout 30s nginx -g 'daemon off;'
     networks:
       - node-network
     ports: 
